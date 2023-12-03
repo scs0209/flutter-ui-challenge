@@ -17,11 +17,24 @@ class Webtoon extends StatelessWidget {
       onTap: () {
         // route는 DetailScreen과 같은 StatelessWidget을 애니메이션 효과로 감싸서 스크린처럼 보이도록 해준다.
         // Navigator.push는 StatelessWidget을 원하기 않기 때문에 그냥 DetailScreen을 바로 넣으면 안된다. route 부분에
+        // Navigator.push를 사용하면 유저가 다른 페이지로 왔다고 느끼게 해줄 수 있다. 사실은 또 다른 StatelessWidget을 렌더링했을 뿐이다.
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) =>
-                DetailScreen(title: title, thumb: thumb, id: id),
+          PageRouteBuilder(
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = const Offset(1.0, 0.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+            pageBuilder: (context, anmation, secondaryAnimation) =>
+                DetailScreen(id: id, title: title, thumb: thumb),
           ),
         );
       },
