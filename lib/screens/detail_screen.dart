@@ -53,49 +53,46 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Hero(
-                  tag: widget.id,
-                  child: Container(
-                    width: 250,
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 15,
-                            offset: const Offset(10, 10),
-                            color: Colors.black.withOpacity(0.5),
-                          )
-                        ]),
-                    child: Image.network(
-                      widget.thumb,
-                      headers: const {
-                        "User-Agent":
-                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-                      },
+        child: Padding(
+          padding: const EdgeInsets.all(50),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: widget.id,
+                    child: Container(
+                      width: 250,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 15,
+                              offset: const Offset(10, 10),
+                              color: Colors.black.withOpacity(0.5),
+                            )
+                          ]),
+                      child: Image.network(
+                        widget.thumb,
+                        headers: const {
+                          "User-Agent":
+                              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            FutureBuilder(
-              future: webtoon,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    child: Column(
+                ],
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              FutureBuilder(
+                future: webtoon,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -114,30 +111,67 @@ class _DetailScreenState extends State<DetailScreen> {
                           ),
                         ),
                       ],
-                    ),
-                  );
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            FutureBuilder(
-              future: episodes,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  // 여기서는 Column을 사용할건데 episodes의 길이가 최대 10개 이기 때문이다. 많은 데이터가 필요하면 최적화를 위해 ListView, ListViewBuilder를 사용하겠지만 적은 데이터는 Column을 사용해도 충분하다
-                  return Column(
-                    children: [
-                      for (var episode in snapshot.data!) Text(episode.title)
-                    ],
-                  );
-                }
-                return Container();
-              },
-            ),
-          ],
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              FutureBuilder(
+                future: episodes,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    // 여기서는 Column을 사용할건데 episodes의 길이가 최대 10개 이기 때문이다. 많은 데이터가 필요하면 최적화를 위해 ListView, ListViewBuilder를 사용하겠지만 적은 데이터는 Column을 사용해도 충분하다
+                    return Column(
+                      children: [
+                        for (var episode in snapshot.data!)
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade400,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 5,
+                                  offset: const Offset(5, 5),
+                                  color: Colors.black.withOpacity(0.5),
+                                )
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    episode.title,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.chevron_right_rounded,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                      ],
+                    );
+                  }
+                  return Container();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
